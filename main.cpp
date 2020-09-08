@@ -24,8 +24,8 @@ void refresh(string *s){
         n=*itr/10;
         *itr=*itr%10;
     }
-    string t="0";
-    t[0]=n;
+    string t;
+    t.push_back('0'-48);
     if(n)
         add_to_start(s,t);
     int_to_char(s);
@@ -97,6 +97,26 @@ void multiply(string *s,string *s2,string *res){
         decrease_by_one(s2);
     }
 }
+void multiply2(string *s,string *s2,string *res){
+    char_to_int(s);
+    char_to_int(s2);
+    for(int i=0;i<(*s).length();i++)
+        (*res).push_back('0'-48);
+    for(int i=0;i<(*s2).length();i++)
+        (*res).push_back('0'-48);
+    for(int r=(*s).length()-1,j=0;r>=0;r--,j++){
+        for(int i=(*s2).length()-1,k=0;i>=0;i--,k++){
+            (*res)[(*res).length()-1-(j+k)]+=((*s)[r]*(*s2)[i]);
+        }
+        refresh(res);
+        int_to_char(res);
+        char_to_int(res);
+    }
+    int_to_char(s);
+    int_to_char(s2);
+    int_to_char(res);
+    erase_zero_from_start(res);
+}
 void division_(string *s,string *s2,string *res){
     *res="0";
     while(compare_(*s,*s2)!=-1){
@@ -104,6 +124,31 @@ void division_(string *s,string *s2,string *res){
         increase_by_one(res);
     }
 
+}
+void division2(string *s,string *s2,string *res){
+    string temp;
+    //char_to_int(&s)
+    for(int i=0;i<(*s).length();i++){
+        temp.push_back( (*s)[i++] );
+        while(i<(*s).length()&&compare_(temp,*s2)==-1){
+            (*res).push_back('0');
+            temp.push_back((*s)[i++]);
+        }
+        int n=0;
+        while(compare_(temp,*s2)!=-1){
+            minus_(&temp,s2);
+            n++;
+        }
+        if(n){
+           (*res).push_back(n+48);
+        }else{
+            (*res)+=temp;
+        }
+        if(compare_(temp,"0")==0)
+            temp.clear();
+        i--;
+    }
+    erase_zero_from_start(res);
 }
 void run(){
     string s,s2,res;
@@ -141,7 +186,12 @@ void run(){
     }
 }
 int main() {
-    run();
+    //run();
+    string s,s2,res;
+    cin>>s;
+    cin>>s2;
+    division2(&s,&s2,&res);
+    cout<<res;
     puts("\nExit enter\n");
     getchar();
     return 0;
